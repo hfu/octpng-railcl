@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>鉄どこ地図</title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="http://handygeospatial.github.io/mapsites/js/leaflet-hash.js"></script>
+<script src="http://handygeospatial.github.io/mapsites/js/TileLayer.GeoJSON.js"></script>
+<script src="http://handygeospatial.github.io/mapsites/js/corslite.js"></script>
+<style>
+body {padding: 0; margin: 0}
+html, body, #mapdiv {height: 100%; width: 100%;}
+.leaflet-container {background: #fff;}
+</style>
+</head>
+<body>
+<div id="mapdiv">
+<script>
+var std = L.tileLayer(
+  'http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+    attribution: "地理院"
+  });
+var seamless = L.tileLayer(
+  'http://gbank.gsj.jp/seamless/tilemap/detailed/g/{z}/{y}/{x}.png', {
+    attribution: "GSJ/AIST シームレス地質図"
+  });
+var blank = L.tileLayer(
+  'http://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png', {
+    attribution: '地理院', maxNativeZoom: 14, maxZoom: 18
+  }
+)
+var oct = L.tileLayer(
+  './{z}/{x}/{y}.png', {
+    minZoom: 8, maxNativeZoom: 8, maxZoom: 18, errorTileUrl: '404.png'
+  });
+
+var map = L.map('mapdiv', {
+  center: [35.722, 139.699], zoom: 8, minZoom: 8,
+  layers: [std, oct]});
+
+var hash = L.hash(map);
+L.control.layers({}, {
+  '地理院標準地図': std, 'GSJ/AIST シームレス地質図': seamless,
+  '地理院白地図': blank, '川どこ地図': oct
+}).addTo(map);
+</script>
+</body>
+</html>
